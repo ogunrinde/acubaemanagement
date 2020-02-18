@@ -48,13 +48,13 @@
     margin-top: 3vh;
 }
 .sublist > div{
-   width: 48%;
+   width: 31%;
    margin-right: 10px;
 }
 .prodtitle{
     display: flex;
     margin-bottom: 10px;
-    height: 30vh;
+    height: 45vh;
 }
 .prodtitle > div {
     display: flex;
