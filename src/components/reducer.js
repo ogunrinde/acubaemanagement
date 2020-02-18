@@ -7,6 +7,7 @@ const initial_state = {
     //siteurl:'http://localhost/CustomerApp/public',
     products:{},
     orders:[],
+    deals:[],
     customerdetails:{}
 };
 
@@ -31,6 +32,10 @@ const DataReducer = (state = initial_state, action) => {
         case 'PRODUCTS':
                 return Object.assign({}, state, {
                 products:action.data.products
+        });
+        case 'DEALS':
+                return Object.assign({}, state, {
+                deals:action.data.deals
         });
         case 'CUSTOMER':
                 return Object.assign({}, state, {
