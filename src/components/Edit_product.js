@@ -27,6 +27,10 @@ class EditProduct extends Component {
             suits:'',
             children_wear:'',
             files:[],
+            small:'0',
+            medium:'0',
+            large:'0',
+            xlarge:'0',
             siteurl:'http://localhost/CustomerApp/public'
         }
         this.submitData = this.submitData.bind(this);
@@ -65,7 +69,16 @@ class EditProduct extends Component {
             suits:this.props.data.products.suits,
             children_wear:this.props.data.products.children_wear,
             id:this.props.data.products.id
-        })
+        });
+        if(this.props.data.products.sizes !== ''){
+            let sizes = this.props.data.products.sizes.split(";");
+            for(let s = 0; s < sizes.length; s++){
+                if(sizes[s] == 'S') this.setState({small:'1'});
+                if(sizes[s] == 'M') this.setState({medium:'1'});
+                if(sizes[s] == 'L') this.setState({large:'1'});
+                if(sizes[s] == 'XL') this.setState({xlarge:'1'});
+            }
+        }
     }
     componentWillMount(){
         let status = this.props.data.isloggin;
@@ -100,10 +113,6 @@ class EditProduct extends Component {
             alert('Gender is Unknown');
             return false;
         }
-        if(this.state.files.length == 0){
-            alert('Product Images is Required');
-            return false;
-        }
         this.setState({isFetching:true});
         data.append('productname',this.state.prodtname);
         data.append('price',this.state.price);
@@ -121,12 +130,18 @@ class EditProduct extends Component {
         this.state.files.forEach((image_file) => {
             data.append('images[]', image_file);
        });
+       let allsize = [];
+       if(this.state.small == '1') allsize.push('S');
+       if(this.state.medium == '1') allsize.push('M');
+       if(this.state.large == '1') allsize.push('L');
+       if(this.state.xlarge == '1') allsize.push('XL');
+       data.append('sizes',allsize.join(";"));
         //data.append('images',this.state.files);
         //for(let f  = 0; f < this.state.files; f++){
           //  data.append('images[]',this.state.files[f]);
         //}
         
-        await fetch(`${this.props.data.siteurl}/api/auth/addproduct`,{
+        await fetch(`${this.props.data.siteurl}/api/auth/editproduct`,{
             method:'POST',
             headers:{
                 'Accept': 'application/json',
@@ -167,6 +182,12 @@ class EditProduct extends Component {
             alert("Error: Please check your internet");
           });
     }
+    sizes = (size,val) =>{
+        if(size == 'small') this.setState({'small':val});
+        if(size =='medium') this.setState({'medium':val});
+        if(size == 'large') this.setState({'large':val});
+        if(size == 'xlarge') this.setState({'xlarge':val});
+     }
     render() {
         return (
             <div className="wrapper">
@@ -206,6 +227,33 @@ class EditProduct extends Component {
                                        <div style={{fontSize:14,fontWeight:500}}>Quantity</div>
                                        <div><input value = {this.state.quantity} onChange = {event => this.setState({quantity:event.target.value})} type = "number" className ="" style={{padding:10,width:'95%',border: '1px solid #CCCCCC',borderRadius: 3}}/> </div>
                                      </div>
+                                     <div>
+                                       <div style={{fontSize:14,fontWeight:500,marginLeft:30}}>Sizes</div>
+                                       <span style={{marginLeft:30}}>S</span>
+                                       {
+                                             this.state.small == '1' ?
+                                             (<p onClick = {()=>this.sizes('small','0')} style={{display:'inline-block',position:'relative',zIndex:10,backgroundColor:'#EC5198',color:'#EC5198',borderRadius:3,border: '2px solid #EC5198',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>):
+                                             (<p onClick = {()=>this.sizes('small','1')} style={{display:'inline-block',position:'relative',zIndex:10,color:'#DADADA',borderRadius:3,border: '2px solid #CCCCCC',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>)
+                                         }
+                                         <span>M</span>
+                                       {
+                                             this.state.medium == '1' ?
+                                             (<p onClick = {()=>this.sizes('medium','0')} style={{display:'inline-block',position:'relative',zIndex:10,backgroundColor:'#EC5198',color:'#EC5198',borderRadius:3,border: '2px solid #EC5198',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>):
+                                             (<p onClick = {()=>this.sizes('medium','1')} style={{display:'inline-block',position:'relative',zIndex:10,color:'#DADADA',borderRadius:3,border: '2px solid #CCCCCC',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>)
+                                         }
+                                        <span>L</span>
+                                       {
+                                             this.state.large == '1' ?
+                                             (<p onClick = {()=>this.sizes('large','0')} style={{display:'inline-block',position:'relative',zIndex:10,backgroundColor:'#EC5198',color:'#EC5198',borderRadius:3,border: '2px solid #EC5198',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>):
+                                             (<p onClick = {()=>this.sizes('large','1')} style={{display:'inline-block',position:'relative',zIndex:10,color:'#DADADA',borderRadius:3,border: '2px solid #CCCCCC',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>)
+                                         } 
+                                         <span>XL</span>
+                                       {
+                                             this.state.xlarge == '1' ?
+                                             (<p onClick = {()=>this.sizes('xlarge','0')} style={{display:'inline-block',position:'relative',zIndex:10,backgroundColor:'#EC5198',color:'#EC5198',borderRadius:3,border: '2px solid #EC5198',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>):
+                                             (<p onClick = {()=>this.sizes('xlarge','1')} style={{display:'inline-block',position:'relative',zIndex:10,color:'#DADADA',borderRadius:3,border: '2px solid #CCCCCC',width:15,height:15,textAlign:'center',margin:7,top:10}}></p>)
+                                         }
+                                     </div>
                                     
                                  </div>
                              </div>
@@ -213,7 +261,7 @@ class EditProduct extends Component {
                                     <div>
                                        <div style={{fontSize:14,fontWeight:500}}>Upload Pictures</div>
                                     </div>
-                                    <div style={{border:'1px solid #CCCCCC',height:'70%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                                    <div style={{border:'1px solid #CCCCCC',height:'40%',display:'flex',justifyContent:'center',alignItems:'center'}}>
                                      <img src={require('../components//assets/illustrate.png')} style={{width:60,height:60}}/>  
                                      <h3>{this.state.files.length} IMAGES ADDED</h3>                                      
                                     </div>
@@ -238,7 +286,7 @@ class EditProduct extends Component {
                              <div className="cate">
                                  <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Gender</div> 
                                  <div>
-                                    <select onChange = {event => this.setState({gender:event.target.value,children_wear:'',dresses:'',top:'',skirts:'',trouser_short:'',dresses:''})} name = 'gender' className="form-control" style={{padding:10}}>
+                                    <select value = {this.state.gender} onChange = {event => this.setState({gender:event.target.value,children_wear:'',dresses:'',top:'',skirts:'',trouser_short:'',dresses:''})} name = 'gender' className="form-control" style={{padding:10}}>
                                         <option value=""></option>
                                         <option value ="Men">Men</option>
                                         <option value="Women">Women</option>
@@ -250,7 +298,7 @@ class EditProduct extends Component {
                                      this.state.gender == 'Women' && <div>
                                      <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Top</div>
                                         <div>
-                                            <select onChange = {event => this.setState({top:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.top} onChange = {event => this.setState({top:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Camisoles">Camisoles</option>
                                                 <option value="Shirts">Shirts</option>
@@ -262,7 +310,7 @@ class EditProduct extends Component {
                                         </div>
                                         <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Skirts</div>
                                         <div>
-                                            <select onChange = {event => this.setState({skirts:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.skirts} onChange = {event => this.setState({skirts:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Demin skirts">Demin skirts</option>
                                                 <option value="High – low skirts">High – low skirts</option>
@@ -274,7 +322,7 @@ class EditProduct extends Component {
                                         </div>
                                         <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Trousers and shorts</div>
                                         <div>
-                                            <select onChange = {event => this.setState({trouser_short:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.trouser_short} onChange = {event => this.setState({trouser_short:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Cargo pants">Cargo pants</option>
                                                 <option value="Leather shorts">Leather shorts</option>
@@ -290,7 +338,7 @@ class EditProduct extends Component {
                                         </div>
                                         <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Dress</div>
                                         <div>
-                                            <select onChange = {event => this.setState({dresses:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.dresses} onChange = {event => this.setState({dresses:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Abaya">Abaya</option>
                                                 <option value="Bandage dress">Bandage dress</option>
@@ -308,7 +356,7 @@ class EditProduct extends Component {
                                      this.state.gender == 'Men' && <div>
                                      <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Top</div>
                                         <div>
-                                            <select onChange = {event => this.setState({top:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.top} onChange = {event => this.setState({top:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="T-shirts">T-shirts</option>
                                                 <option value="Dashiki">Dashiki</option>
@@ -318,7 +366,7 @@ class EditProduct extends Component {
                                         </div>
                                         <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Trousers and shorts</div>
                                         <div>
-                                            <select onChange = {event => this.setState({trouser_short:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.trouser_short} onChange = {event => this.setState({trouser_short:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Cargo pants">Cargo pants</option>
                                                 <option value="Capri pants">Capri pants</option>
@@ -328,7 +376,7 @@ class EditProduct extends Component {
                                         </div>
                                         <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Suits</div>
                                         <div>
-                                            <select onChange = {event => this.setState({suits:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.suits} onChange = {event => this.setState({suits:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Suits">Suits</option>
                                             </select>
@@ -339,7 +387,7 @@ class EditProduct extends Component {
                                      this.state.gender == 'Children' && <div>
                                      <div style={{color:'#4C4C4C',fontSize:14,fontWeight:500}}>Childrens Wear</div>
                                         <div>
-                                            <select onChange = {event => this.setState({children_wear:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
+                                            <select value = {this.state.children_wear} onChange = {event => this.setState({children_wear:event.target.value})} name = 'top' className="form-control" style={{padding:10}}>
                                                 <option value=""></option>
                                                 <option value ="Top">Top</option>
                                                 <option value="Skirts">Skirts</option>
