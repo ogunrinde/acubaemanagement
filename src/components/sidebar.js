@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './css/sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUser, faShoppingCart, faMoneyCheck, faAddressBook } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUser, faShoppingCart,faBriefcase, faMoneyCheck, faAddressBook } from '@fortawesome/free-solid-svg-icons';
 import {connect} from 'react-redux';
 import {logout} from '../components/action';
 import { Link } from 'react-router-dom'
@@ -88,6 +88,13 @@ class Sidebar extends Component {
                          <FontAwesomeIcon icon={faUser} />  <Link to='/product'><span style={{marginLeft:10}}>Products</span></Link>
                         </div>) :(<div className="lastlist others">
                          <FontAwesomeIcon icon={faUser} />  <Link to='/product'><span style={{marginLeft:10}}>Products</span></Link>
+                        </div>)
+                       }
+                       {
+                         this.props.data.whichpage.toLowerCase() == 'deals' ? (<div className="lastlist first">
+                         <FontAwesomeIcon icon={faBriefcase} />  <Link to='/deals'><span style={{marginLeft:10}}>Deals</span></Link>
+                        </div>) :(<div className="lastlist others">
+                         <FontAwesomeIcon icon={faBriefcase} />  <Link to='/deals'><span style={{marginLeft:10}}>Deals</span></Link>
                         </div>)
                        }
                        {
