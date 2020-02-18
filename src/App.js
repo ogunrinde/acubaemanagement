@@ -14,6 +14,8 @@ import {  Provider } from 'react-redux';
 import   Payment from '../src/components/payment';
 import Reports from '../src/components/reports';
 import Arrival from '../src/components/newarrivals';
+import Deals from '../src/components/deals';
+import AddDeal from '../src/components/adddeals';
 import './App.css';
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
           <Route path="/payment" component = {Payment}/>
           <Route path="/report" component = {Reports}/>
           <Route path="/arrival" component = {Arrival}/>
+          <Route path="/deals" component = {Deals}/>
+          <Route path="/adddeals" component = {AddDeal}/>
           
           </Switch>
      </BrowserRouter>
