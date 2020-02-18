@@ -23,9 +23,27 @@ export const eachproducts = (data) => {
         data:data
     }
 };
+export const eachdeals = (data) => {
+    return {
+        type: 'DEALS',
+        data:data
+    }
+};
 export const eachcustomer = (data) => {
     return {
         type: 'CUSTOMER',
+        data:data
+    }
+};
+export const allorders = (data) => {
+    return {
+        type: 'ORDERS',
+        data:data
+    }
+};
+export const orderdetails = (data) => {
+    return {
+        type: 'ORDERDETAILS',
         data:data
     }
 };
